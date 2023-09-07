@@ -11,3 +11,9 @@ export class AuthUserWhrogError extends ErrorBase {
     super('O email ou a senha esta errado!', 401);
   }
 }
+
+export class UserAlreadyExists extends ErrorBase {
+  constructor() {
+    super('O email já existe, tente com outro!', 400);
+  }
+}
