@@ -1,12 +1,17 @@
+import { UserEntity } from 'src/app/core/entities/user';
 import { Either, Left, Right } from 'src/app/core/errors/either';
 import { ErrorBase } from 'src/app/core/errors/errorBase';
+import { EmailError, EmailMessage } from 'src/app/core/errors/user/email';
+import {
+  PasswordError,
+  PasswordMessage,
+} from 'src/app/core/errors/user/password';
 import {
   AuthUserUseCaseInput,
   AuthUserUseCaseInterface,
   AuthUserUseCaseOutput,
 } from 'src/app/core/interfaces/useCases/user/authUser';
 import { UserRepositoryInterface } from '../../interfaces/repository/user';
-import { UserEntity } from 'src/app/core/entities/user';
 import { EncryptorInterface } from '../../interfaces/utils/encrypt';
 import { AuthUserWhrogError } from '../../errors/user';
 import { JsonWebTokenInterface } from '../../interfaces/utils/jwt';
@@ -18,15 +23,32 @@ export class AuthUserUseCase implements AuthUserUseCaseInterface {
     private readonly jwt: JsonWebTokenInterface,
   ) {}
 
-  private async checkIfEmailsExists(
+  private createUserEntity(
+    email: string,
+    password: string,
+  ): Either<ErrorBase, UserEntity> {
+    const userData = new UserEntity({
+      createdAt: new Date(),
+      email: email,
+      password: password,
+      id: '',
+      name: '',
+      updatedAt: new Date(),
+    });
+
+    if (!UserEntity.isValidEmail(userData.user.email))
+      return Left.create(new EmailError(EmailMessage.invalid));
+    if (!UserEntity.isValidPassword(userData.user.password))
+      return Left.create(new PasswordError(PasswordMessage.invalid));
+    return Right.create(userData);
+  }
+
+  private async findUser(
     email: string,
   ): Promise<Either<ErrorBase, UserEntity>> {
-    const emailsExists = await this.userRepo.findByEmail(email);
-
-    if (emailsExists.left) {
-      return Left.create(emailsExists.left);
-    }
-    return Right.create(emailsExists.right);
+    const userOrError = await this.userRepo.findByEmail(email);
+    if (userOrError.left) return Left.create(userOrError.left);
+    return Right.create(userOrError.right);
   }
 
   async exec(
@@ -34,31 +56,33 @@ export class AuthUserUseCase implements AuthUserUseCaseInterface {
   ): Promise<Either<ErrorBase, AuthUserUseCaseOutput>> {
     const { email, password } = input;
 
-    const emailsExistsOrError = await this.checkIfEmailsExists(email);
-    if (emailsExistsOrError.left) return Left.create(emailsExistsOrError.left);
+    const userDataOrError = this.createUserEntity(email, password);
+    if (userDataOrError.left) return Left.create(userDataOrError.left);
 
-    const comparePasswordOrError = await this.encryptor.compare(
-      emailsExistsOrError.right.user.password,
+    const userOrError = await this.findUser(email);
+    if (userDataOrError.left) return Left.create(userOrError.left);
+
+    const passwordIsRight = await this.encryptor.compare(
+      userDataOrError.right.user.password,
       password,
     );
 
-    if (comparePasswordOrError.left)
-      return Left.create(comparePasswordOrError.left);
+    if (passwordIsRight.left) return Left.create(passwordIsRight.left);
+    if (!passwordIsRight.right) return Left.create(new AuthUserWhrogError());
 
-    if (!comparePasswordOrError.right)
-      return Left.create(new AuthUserWhrogError());
+    userDataOrError.right.user.password = undefined;
+    userDataOrError.right.user.updatedAt = userOrError.right.user.updatedAt;
+    userDataOrError.right.user.createdAt = userOrError.right.user.createdAt;
+    userDataOrError.right.user.id = userOrError.right.user.id;
 
-    const jwt = await this.jwt.encrypt({
-      id: emailsExistsOrError.right.user.id,
+    const token = await this.jwt.encrypt({
+      id: userDataOrError.right.user.id,
     });
-
-    if (jwt.left) return Left.create(jwt.left);
-
-    emailsExistsOrError.right.user.password = '';
+    if (token.left) return Left.create(token.left);
 
     return Right.create({
-      jwt: jwt.right,
-      user: emailsExistsOrError.right.user,
+      jwt: token.right,
+      user: userDataOrError.right.user,
     });
   }
 }
