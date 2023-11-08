@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Either, Left, Right } from 'src/app/core/errors/either';
-import { ErrorBase } from 'src/app/core/errors/errorBase';
-import { AuthUserFactory } from 'src/app/presentation/factory/authUser';
-import { PrismaService } from 'src/services/prisma.service';
+import { Either, Left, Right } from '../app/core/errors/either';
+import { ErrorBase } from '../app/core/errors/errorBase';
+import { AuthUserFactory } from '../app/presentation/factory/authUser';
+import { PrismaService } from '../services/prisma.service';
 
 interface SignInOutput {
   token_jwt: string;

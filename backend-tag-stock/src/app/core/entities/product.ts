@@ -7,7 +7,7 @@ import {
 } from '../errors/product/description';
 
 export interface ProductInterface {
-  id: string;
+  id: number;
   branch: number;
   description: string;
   shelf: string;
@@ -34,11 +34,11 @@ export class ProductEntity {
   }
 
   static createWithValidations(
-    product: Omit<ProductInterface, 'id' | 'createdAt' | 'updatedAt'>,
+    product: Omit<ProductInterface, 'createdAt' | 'updatedAt'>,
   ): Either<ErrorBase, ProductEntity> {
     const productData = new ProductEntity({
       ...product,
-      id: '',
+      id: 0,
       createdAt: new Date(),
       updatedAt: new Date(),
     });

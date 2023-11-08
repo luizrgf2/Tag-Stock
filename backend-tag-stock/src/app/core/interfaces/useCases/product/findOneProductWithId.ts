@@ -3,7 +3,7 @@ import { Either } from '../../../errors/either';
 import { ErrorBase } from '../../../errors/errorBase';
 
 export interface FindOneProductWithIdUseCaseInput {
-  idProduct: string;
+  idProduct: number;
 }
 
 export interface FindOneProductWithIdUseCaseOutput {

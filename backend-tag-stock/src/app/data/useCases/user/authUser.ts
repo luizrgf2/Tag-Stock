@@ -60,10 +60,10 @@ export class AuthUserUseCase implements AuthUserUseCaseInterface {
     if (userDataOrError.left) return Left.create(userDataOrError.left);
 
     const userOrError = await this.findUser(email);
-    if (userDataOrError.left) return Left.create(userOrError.left);
+    if (userOrError.left) return Left.create(userOrError.left);
 
     const passwordIsRight = await this.encryptor.compare(
-      userDataOrError.right.user.password,
+      userOrError.right.user.password,
       password,
     );
 

@@ -6,53 +6,37 @@ import {
   HttpException,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDTO } from './dto/create-user.dto';
-import { PrismaService } from 'src/services/prisma.service';
-import { CreateUserFactory } from 'src/app/presentation/factory/createUser';
-import { CreateUserUseCaseOutput } from 'src/app/core/interfaces/useCases/user/createUser';
-import { FindOneUserCaseOutput } from 'src/app/core/interfaces/useCases/user/findOneUser';
-import { FindUserFactory } from 'src/app/presentation/factory/findUser';
-
-interface FindWithEmailOrIdProps {
-  email?: string;
-  id?: string;
-}
+import { CreateUserService } from './user/create-user.service';
+import { FindOneUserService } from './user/find-user-with-email-or-id.service';
+import { CreateUserUseCaseOutput } from '../app/core/interfaces/useCases/user/createUser';
+import { FindOneUserCaseOutput } from '../app/core/interfaces/useCases/user/findOneUser';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('user')
-export class CreateUserNestController {
-  constructor(private readonly prismaService: PrismaService) {}
+export class UserController {
+  constructor(
+    private readonly createUserService: CreateUserService,
+    private readonly findUserService: FindOneUserService,
+  ) {}
 
   @Post('create')
   @HttpCode(201)
   async create(@Body() body: CreateUserDTO): Promise<CreateUserUseCaseOutput> {
-    const useCase = CreateUserFactory.handle(this.prismaService);
-    const response = await useCase.exec({
-      body: {
-        ...body,
-      },
-    });
-    if (response.error)
-      throw new HttpException(response.error, response.status);
-    return { user: response.body.user };
+    const response = await this.createUserService.exec(body);
+    if (response.left)
+      throw new HttpException(response.left.message, response.left.code);
+    return response.right;
   }
 
+  @UseGuards(AuthGuard)
   @Get('find')
-  async findWithEmailOrId(
-    @Query() query: FindWithEmailOrIdProps,
-  ): Promise<FindOneUserCaseOutput> {
-    const useCase = FindUserFactory.handle(this.prismaService);
-    const response = await useCase.exec({
-      body: {
-        ...query,
-      },
-    });
-
-    if (response.error)
-      throw new HttpException(response.error, response.status);
-
-    return {
-      user: response.body.user,
-    };
+  async findWithEmailOrId(@Query() query): Promise<FindOneUserCaseOutput> {
+    const response = await this.findUserService.exec(query);
+    if (response.left)
+      throw new HttpException(response.left.message, response.left.code);
+    return response.right;
   }
 }

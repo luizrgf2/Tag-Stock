@@ -10,7 +10,7 @@ export enum ServerErrorMessage {
 }
 
 export class ServerError extends ErrorBase {
-  constructor(message: ServerErrorMessage) {
+  constructor(message: ServerErrorMessage | string) {
     super(message, 500);
   }
 }

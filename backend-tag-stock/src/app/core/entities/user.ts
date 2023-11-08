@@ -29,9 +29,7 @@ export class UserEntity {
   }
 
   static isValidName(name: string): boolean {
-    const containsNumberRegex: RegExp = /\d/;
     if (name.length === 0 || name.length > 30) return false;
-    if (!containsNumberRegex.test(name)) return false;
     return true;
   }
 

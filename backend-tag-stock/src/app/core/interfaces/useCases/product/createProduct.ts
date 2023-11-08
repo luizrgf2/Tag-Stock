@@ -3,7 +3,7 @@ import { Either } from '../../../errors/either';
 import { ErrorBase } from '../../../errors/errorBase';
 
 export interface CreateProductUseCaseInput
-  extends Omit<ProductInterface, 'createdAt' | 'updatedAt'> {}
+  extends Omit<ProductInterface, 'createdAt' | 'updatedAt' | 'id'> {}
 
 export interface CreateProductUseCaseOutput {
   product: ProductInterface;

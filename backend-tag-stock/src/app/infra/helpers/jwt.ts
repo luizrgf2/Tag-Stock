@@ -1,7 +1,7 @@
 import { Either, Left, Right } from 'src/app/core/errors/either';
 import { ErrorBase } from 'src/app/core/errors/errorBase';
 import { JsonWebTokenInterface } from 'src/app/data/interfaces/utils/jwt';
-import jwt from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 import { ServerError, ServerErrorMessage } from '../errors/server';
 import { JWTError, JWTErrorMessage } from '../errors/jwt';
 
