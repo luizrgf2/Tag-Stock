@@ -1,0 +1,45 @@
+{
+  "expo": {
+    "name": "mobile-tag-stock",
+    "slug": "mobile-tag-stock",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "your-app-scheme",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tag.stock"
+    },
+    "android": {
+      "compileSdkVersion": 31,
+      "targetSdkVersion": 31,
+      "buildToolsVersion": "31.0.0",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "android.permission.NFC"
+      ],
+      "package": "com.tag.stock"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-document-picker",
+      "react-native-nfc-manager",
+      "expo-build-properties",
+      "expo-router"
+    ]
+  }
+}
