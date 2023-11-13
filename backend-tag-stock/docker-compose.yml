@@ -2,10 +2,8 @@ version: '3.9'
 services:
   db:
     restart: always
-    resources:
-      limits:
-        memory: 300M   # Limite de 500 MB de memória
-        cpus: '0.5'    # Limite para 0,5 CPUs
+    mem_limit: 300M   # Limite de 500 MB de memória
+    cpus: '0.5'     # Limite para 0,5 CPUs
     image: mysql
     ports:
       - "3301:3306"
@@ -17,10 +15,8 @@ services:
       - ./mysql-data:/var/lib/mysql
   
   backend:
-    resources:
-      limits:
-        memory: 300M   # Limite de 500 MB de memória
-        cpus: '0.5'  
+    mem_limit: 300M   # Limite de 500 MB de memória
+    cpus: '0.5'   
     restart: always
     depends_on:
       - db
