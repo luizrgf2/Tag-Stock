@@ -11,6 +11,9 @@ services:
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
     networks:
       - service-net
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+  
   backend:
     mem_limit: 300M   # Limite de 500 MB de memória
     cpus: '0.5'   
