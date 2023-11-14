@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "mobile-tag-stock",
+    "name": "Tag Stock",
     "slug": "mobile-tag-stock",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -20,9 +20,6 @@
       "bundleIdentifier": "com.tag.stock"
     },
     "android": {
-      "compileSdkVersion": 31,
-      "targetSdkVersion": 31,
-      "buildToolsVersion": "31.0.0",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -38,8 +35,18 @@
     "plugins": [
       "expo-document-picker",
       "react-native-nfc-manager",
+      "expo-file-system",
       "expo-build-properties",
-      "expo-router"
-    ]
+      "expo-router",
+      "expo-notifications",
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "b64e4e82-ee29-49e2-a51c-b0291e594c29"
+      }
+    }
   }
 }

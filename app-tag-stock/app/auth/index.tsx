@@ -39,7 +39,7 @@ export default function AuthPage(){
             <StatusBar backgroundColor="black" barStyle="light-content"></StatusBar>
             <Image
                 style={styles.logoImage}
-                source={require("../../assets/tag-stock.png")}
+                source={require("../../images/tagStock.png")}
             ></Image>
 
             <Input
