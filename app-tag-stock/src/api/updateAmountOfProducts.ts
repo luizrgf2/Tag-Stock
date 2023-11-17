@@ -2,6 +2,7 @@ import axios from "axios";
 import { Either, Left, Right } from "../interfaces/either";
 import { ProductInterface } from "../interfaces/product";
 import { LocalStorage } from "../utils/localStorage";
+import { URL_BACKEND } from "./url";
 
 export interface InputUpdateAmountOfProducts {
     branch: number;
@@ -15,7 +16,7 @@ export interface InputUpdateAmountOfProducts {
 export class UpdateAmountOfProductAPI {
 
     async exec(input: InputUpdateAmountOfProducts): Promise<Either<ErrorHTTPInterface, void>> {
-        const url = `${process.env.EXPO_PUBLIC_URL_BACKEND_END}/product/updateamount`
+        const url = `${URL_BACKEND}/product/updateamount`
 
         const token = await LocalStorage.getTokenSession()
 

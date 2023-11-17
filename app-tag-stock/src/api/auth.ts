@@ -1,5 +1,6 @@
 import axios from "axios"
 import { Either, Left, Right } from "../interfaces/either"
+import { URL_BACKEND } from "./url"
 
 interface InputAuthAPI {
     email: string,
@@ -13,7 +14,7 @@ interface OutpuAuthAPI {
 export class AuthAPI {
 
     async exec(input: InputAuthAPI): Promise<Either<ErrorHTTPInterface, OutpuAuthAPI>> {
-        const url = `${process.env.EXPO_PUBLIC_URL_BACKEND_END}/auth/login`
+        const url = `${URL_BACKEND}/auth/login`
 
         
         try{

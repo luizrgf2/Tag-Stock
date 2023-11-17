@@ -2,6 +2,7 @@ import axios from "axios";
 import { Either, Left, Right } from "../interfaces/either";
 import { LocalStorage } from "../utils/localStorage";
 import { ProductInterface } from "../interfaces/product";
+import { URL_BACKEND } from "./url";
 
 export interface InpuFindOneProductWithId {
     id: number
@@ -14,7 +15,7 @@ export interface OutputFindOneProductWithId  {
 export class findOneProductWithIdAPI {
 
     async exec(input: InpuFindOneProductWithId): Promise<Either<ErrorHTTPInterface, OutputFindOneProductWithId>> {
-        const url = `${process.env.EXPO_PUBLIC_URL_BACKEND_END}/product/find/`+String(input.id)
+        const url = `${URL_BACKEND}/product/find/`+String(input.id)
 
         const token = await LocalStorage.getTokenSession()
 
